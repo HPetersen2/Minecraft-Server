@@ -1,0 +1,14 @@
+version: '3.9'
+
+services:
+  minecraft-server:
+  build: .
+  ports:
+    - 8888:8888
+  environment:
+  - APPLICATION_PORT=8888
+  volumes:
+  - local_data:/app/
+
+volumes:
+  local_data:
