@@ -135,8 +135,6 @@ ENV/
 env.bak/
 venv.bak/
 server.jar
-docker-compose.yml
-Dockerfile
 
 # Spyder project settings
 .spyderproject
