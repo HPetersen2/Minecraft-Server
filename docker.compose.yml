@@ -1,9 +1,9 @@
 version: '3.9'
 
 services:
-  minecraft:
+  mc-server:
     build: .
-    container_name: minecraft
+    container_name: mc-server
     ports:
       - "8888:25565"
     volumes:
