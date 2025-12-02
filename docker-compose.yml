@@ -6,15 +6,17 @@ services:
     container_name: mc-server
 
     ports:
-      - "8888:25565"
+      - "${PORT}:25565"
 
     volumes:
       - ./data:/data
 
     environment:
-      EULA: "TRUE"
-      XMX: "2G"
-      XMS: "1G"
+      EULA: ${EULA}
+      XMX: ${XMX}
+      XMS: ${XMS}
+      ENABLE_QUERY: ${ENABLE_QUERY}
+      QUERY_PORT: ${QUERY_PORT}
 
     stdin_open: true
     tty: true
