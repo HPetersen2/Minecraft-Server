@@ -55,6 +55,7 @@ forge*.jar
 # Environment Files / Secrets
 ##########################################
 
+env
 .env
 *.env
 secrets/
