@@ -9,146 +9,161 @@
 
 ## Description
 
-This repository provides a fully containerized **Minecraft server** that can be used for multiplayer gaming.  
-The server runs inside Docker, allowing easy setup, isolation, and portability.
+This repository provides a fully containerized **Minecraft server** for multiplayer gaming. The server runs inside Docker, allowing easy setup, isolation, and portability.
 
-**Key contents include:**
+**Key contents:**
 - Dockerfile for building the Minecraft server image
 - `.env.template` for environment variable configuration
-- Python scripts and utilities for testing and automation
-- Instructions for running the server both quickly and with custom configurations
+- Python test script to verify server connectivity
 
-The main purpose of this repository is to provide a **ready-to-use, configurable Minecraft server** environment that can be run locally or deployed to a server without manual installation of Java or Minecraft server files.
+**Purpose:** Provide a ready-to-use, configurable Minecraft server environment that can be run locally or deployed to a server without manual installation of Java or Minecraft server files.
 
 ---
 
 ## Quickstart
 
 ### Prerequisites
-- [Docker](https://docs.docker.com/get-docker/) installed on your system
-- [Python 3](https://www.python.org/downloads/) (for optional scripts/testing)
+- [Docker](https://docs.docker.com/get-docker/) installed and running on your system
+- [Python 3](https://www.python.org/downloads/) (optional, for server status testing)
 
 ### Quick Setup
 
-1. **Copy the environment template**
-```bash
-cp .env.template .env
-```
+1. **Download the Minecraft Server JAR**
 
-2. **Fill out the .env file**  
-   Update the necessary environment variables (e.g., server name, port, memory allocation).
+   Download the server JAR from the official Minecraft website:  
+   [https://www.minecraft.net/de-de/download/server](https://www.minecraft.net/de-de/download/server)
 
-3. **Build the Docker image**
-```bash
-docker build -t <image-name> -f Dockerfile .
-```
+   For V-Server deployments, download directly using curl:
+   ```bash
+   curl -o minecraft_server.1.21.10.jar https://piston-data.mojang.com/v1/objects/95495a7f485eedd84ce928cef5e223b757d2f764/server.jar
+   ```
 
-4. **Run the Docker container**  
-   Ignore any warnings during this step; environment variables will be loaded from `.env`.
-```bash
-docker run -p <PORT>:25565 --env-file .env <image-name>
-```
+   **Rename the file to `Server.jar`** and place it in the repository root.
 
-The Minecraft server should now be running and accessible on the specified port.
+2. **Configure environment variables**
+   ```bash
+   cp .env.template .env
+   ```
+   
+   Edit the `.env` file with your preferred settings:
+   - `PORT`: Host port for the server (default: 8888)
+   - `EULA`: Must be TRUE to accept Minecraft EULA
+   - `XMX`: Maximum memory allocation (e.g., 2G, 4G)
+   - `XMS`: Initial memory allocation (e.g., 1G, 2G)
+   - `ENABLE_QUERY`: Enable query protocol (TRUE/FALSE)
+   - `QUERY_PORT`: Query port (default: 25565)
+   - `HOST`: Host address (default: 127.0.0.1)
 
-5. **Optional: Set up a Python virtual environment for testing**
-```bash
-# Create virtual environment
-python -m venv <env-name>
+3. **Build and run the Docker container**
+   ```bash
+   docker build -t mc-server -f Dockerfile .
+   docker run -p 8888:25565 --env-file .env mc-server
+   ```
 
-# Activate environment
-# On Windows
-<env-name>\Scripts\activate
+   The server is now running and accessible on the configured port.
 
-# On Linux/macOS (Bash)
-source <env-name>/bin/activate
+4. **Optional: Test server connectivity**
 
-# Install dependencies
-pip install -r requirements.txt
+   Set up a Python virtual environment to run `test.py`, which checks if the server is online using the `HOST`, `PORT`, and `QUERY_PORT` values from `.env`:
 
-# Test setup
-python test.py
-```
+   ```bash
+   # Create and activate virtual environment
+   python -m venv venv
+   
+   # On Windows
+   venv\Scripts\activate
+   
+   # On Linux/macOS
+   source venv/bin/activate
+   
+   # Install dependencies and test
+   pip install -r requirements.txt
+   python test.py
+   ```
 
 ---
 
 ## Usage
 
-This section explains how to configure, customize, and run the server in detail.
+This section explains configuration options and customization in detail.
 
-### Environment Configuration
+### Environment Variables
 
-The `.env` file controls the main server configuration. Key variables include:
+The `.env` file controls all server configuration. Modify these variables to achieve different results:
 
-- `SERVER_NAME`: The display name of your Minecraft server
-- `SERVER_PORT`: Port to expose the server on your host machine
-- `MAX_PLAYERS`: Maximum number of players allowed
-- `MOTD`: Message of the day displayed in the server list
-- `MEMORY`: Memory allocation for the server (e.g., 2G, 4G)
+**PORT** (default: 8888)
+- Controls which port the server is exposed on your host machine
+- Example: Change to `30000` to run on port 30000
+- Update the docker run command accordingly: `-p 30000:25565`
 
-**To modify these values**, simply edit the `.env` file before running the container. 
+**XMX and XMS** (default: XMX=2G, XMS=1G)
+- `XMX`: Maximum RAM allocated to the server
+- `XMS`: Initial RAM allocation
+- Example: Set `XMX=4G` and `XMS=2G` for better performance with more players
+- Higher values improve performance but require more system resources
 
-Example configuration:
-```env
-SERVER_NAME=MyMinecraftServer
-SERVER_PORT=25565
-MAX_PLAYERS=20
-MOTD=Welcome to my server!
-MEMORY=2G
-```
+**ENABLE_QUERY and QUERY_PORT** (default: TRUE, 25565)
+- `ENABLE_QUERY`: Enables server status queries
+- `QUERY_PORT`: Port used for status queries
+- Set `ENABLE_QUERY=FALSE` to disable query protocol
+- Change `QUERY_PORT` if the default conflicts with other services
 
-**How to achieve different results:**
-- Change `SERVER_NAME` to customize the server name shown in the multiplayer list
-- Adjust `MAX_PLAYERS` to allow more or fewer concurrent players
-- Modify `MEMORY` to allocate more RAM (e.g., change from `2G` to `4G` for better performance)
-- Update `MOTD` to display a custom welcome message
+**HOST** (default: 127.0.0.1)
+- Binding address for the server
+- Use `127.0.0.1` for local testing
+- Use `0.0.0.0` to allow external connections
+- Use a specific IP to bind to a particular network interface
+
+**EULA** (must be TRUE)
+- Accepts the Minecraft End User License Agreement
+- Server will not start if set to FALSE
 
 ### Building and Running
 
-You can rebuild the Docker image after changing `.env` or Dockerfile settings:
+After modifying `.env` or Dockerfile, rebuild the image:
 ```bash
-docker build -t <image-name> -f Dockerfile .
-docker run -p <PORT>:25565 --env-file .env <image-name>
+docker build -t mc-server -f Dockerfile .
 ```
 
-**To modify the port mapping**, change `<PORT>` in the command. For example, to use port 30000:
+**For local testing:**
 ```bash
-docker run -p 30000:25565 --env-file .env <image-name>
+docker run -p <YOUR_PORT>:25565 --env-file .env mc-server
 ```
 
-**If you want to persist world data**, mount a volume to the container:
+**For V-Server deployment (recommended):**
+
+Use Docker Compose to ensure the server runs continuously in the background:
 ```bash
-docker run -p <PORT>:25565 --env-file .env -v $(pwd)/world:/minecraft/world <image-name>
+docker compose up -d --build
 ```
 
-This ensures your world data is saved on your host system and survives container restarts.
+This starts the container in detached mode, keeping it running even after you disconnect from the server.
 
-### Python Scripts & Testing
+### Persisting World Data
 
-For testing or automation, you can use the included Python scripts:
+To save your world data and survive container restarts, mount a volume:
+```bash
+docker run -p 8888:25565 --env-file .env -v $(pwd)/world:/minecraft/world mcserver
+```
+
+This maps the container's world directory to your host system, ensuring all world data is preserved.
+
+### Server Properties
+
+Advanced server settings can be modified in `server.properties`:
+- `difficulty`: peaceful, easy, normal, hard
+- `gamemode`: survival, creative, adventure, spectator
+- `pvp`: true/false
+- `view-distance`: Number of chunks visible (default: 10)
+- `max-players`: Maximum concurrent players
+
+After modifying `server.properties`, rebuild the container for changes to take effect.
+
+### Testing Server Status
+
+The `test.py` script verifies server connectivity:
 ```bash
 python test.py
 ```
 
-Prerequisites:
-- Ensure the virtual environment is activated
-- Dependencies are installed via `pip install -r requirements.txt`
-- These scripts help verify server connectivity and configuration
-
-**To modify testing behavior**, edit `test.py` to change connection parameters or add custom tests.
-
-### Customization
-
-**Plugins/Mods:**
-- Place custom plugins in the `plugins/` directory
-- Place mods in the `mods/` directory
-- Rebuild the image after adding plugins or mods to include them in the container
-
-**Backups:**
-- Configure your own backup path or schedule using the `backups/` folder
-- Modify backup scripts to change backup frequency or retention
-
-**Server Options:**
-- Advanced server options can be modified inside `server.properties`
-- Edit properties like `difficulty`, `gamemode`, `pvp`, or `view-distance` to customize gameplay
-- Rebuild the container after modifying `server.properties` for changes to take effect
+The script automatically reads `HOST`, `PORT`, and `QUERY_PORT` from your `.env` file. Ensure your virtual environment is activated and dependencies are installed before running.
