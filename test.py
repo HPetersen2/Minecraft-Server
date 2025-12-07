@@ -2,7 +2,7 @@ from mcstatus import JavaServer
 
 # You can pass the same address you'd enter into the address field in minecraft into the 'lookup' function
 # If you know the host and port, you may skip this and use JavaServer("example.org", 1234)
-server = JavaServer.lookup("localhost:8888")
+server = JavaServer.lookup("127.0.0.1:8888")
 
 # 'status' is supported by all Minecraft servers that are version 1.7 or higher.
 # Don't expect the player list to always be complete, because many servers run
@@ -18,5 +18,6 @@ print(f"The server replied in {latency} ms")
 
 # 'query' has to be enabled in a server's server.properties file!
 # It may give more information than a ping, such as a full player list or mod information.
-query = server.query()
+query_server = JavaServer("127.0.0.1", 25565)
+query = query_server.query()
 print(f"The server has the following players online: {', '.join(query.players.names)}")
