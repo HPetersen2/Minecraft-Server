@@ -7,9 +7,10 @@ services:
 
     ports:
       - "${PORT}:25565"
+      - "${QUERY_PORT}:${QUERY_PORT}/udp"
 
     volumes:
-      - ./data:/data
+      - mc-data:/data 
 
     environment:
       EULA: ${EULA}
@@ -22,3 +23,6 @@ services:
     tty: true
 
     restart: unless-stopped
+
+volumes:
+  mc-data:
