@@ -38,8 +38,10 @@ This repository provides a fully containerized **Minecraft server** for multipla
    curl -o minecraft_server.1.21.10.jar https://piston-data.mojang.com/v1/objects/95495a7f485eedd84ce928cef5e223b757d2f764/server.jar
    ```
 
-   > [!IMPORTANT]: 
-   >The file must be named exactly `server.jar`** (not `Server.jar` or any other name). After downloading, rename the file to `server.jar` and place it in the repository root. The downloaded file typically has a version-specific name like `minecraft_server.1.21.10.jar`, which you need to change to `server.jar`.
+   > [!IMPORTANT]
+   > The file must be named exactly `server.jar` (not `Server.jar` or any other name). 
+   > After downloading, rename the file to `server.jar` and place it in the repository root. 
+   > The downloaded file typically has a version-specific name like `minecraft_server.1.21.10.jar`, which you need to change to `server.jar`.
 
 2. **Configure environment variables**
    ```bash
