@@ -1,15 +1,15 @@
 # Minecraft Docker Server
 
+## Description
+
+This repository provides a fully containerized **Minecraft server** for multiplayer gaming. The server runs inside Docker, allowing easy setup, isolation, and portability.
+
+---
+
 ## Table of Contents
 - [Description](#description)
 - [Quickstart](#quickstart)
 - [Usage](#usage)
-
----
-
-## Description
-
-This repository provides a fully containerized **Minecraft server** for multiplayer gaming. The server runs inside Docker, allowing easy setup, isolation, and portability.
 
 **Key contents:**
 - Dockerfile for building the Minecraft server image
