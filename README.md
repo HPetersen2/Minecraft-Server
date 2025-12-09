@@ -38,7 +38,8 @@ This repository provides a fully containerized **Minecraft server** for multipla
    curl -o minecraft_server.1.21.10.jar https://piston-data.mojang.com/v1/objects/95495a7f485eedd84ce928cef5e223b757d2f764/server.jar
    ```
 
-   **Rename the file to `Server.jar`** and place it in the repository root.
+   > [!IMPORTANT]: 
+   >The file must be named exactly `server.jar`** (not `Server.jar` or any other name). After downloading, rename the file to `server.jar` and place it in the repository root. The downloaded file typically has a version-specific name like `minecraft_server.1.21.10.jar`, which you need to change to `server.jar`.
 
 2. **Configure environment variables**
    ```bash
@@ -61,25 +62,6 @@ This repository provides a fully containerized **Minecraft server** for multipla
    ```
 
    The server is now running and accessible on the configured port.
-
-4. **Optional: Test server connectivity**
-
-   Set up a Python virtual environment to run `test.py`, which checks if the server is online using the `HOST`, `PORT`, and `QUERY_PORT` values from `.env`:
-
-   ```bash
-   # Create and activate virtual environment
-   python -m venv venv
-   
-   # On Windows
-   venv\Scripts\activate
-   
-   # On Linux/macOS
-   source venv/bin/activate
-   
-   # Install dependencies and test
-   pip install -r requirements.txt
-   python test.py
-   ```
 
 ---
 
@@ -159,10 +141,24 @@ Advanced server settings can be modified in `server.properties`:
 
 After modifying `server.properties`, rebuild the container for changes to take effect.
 
-### Testing Server Status
+### Optional: Testing Server Status
 
 The `test.py` script verifies server connectivity:
+
+Set up a Python virtual environment to run `test.py`, which checks if the server is online using the `HOST`, `PORT`, and `QUERY_PORT` values from `.env`:
+
 ```bash
+# Create and activate virtual environment
+python -m venv venv
+
+# On Windows
+venv\Scripts\activate
+
+# On Linux/macOS
+source venv/bin/activate
+
+# Install dependencies and test
+pip install -r requirements.txt
 python test.py
 ```
 
