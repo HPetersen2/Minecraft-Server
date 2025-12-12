@@ -1,0 +1,26 @@
+services:
+  mc-server:
+    build: .
+    container_name: mc-server
+
+    ports:
+      - "${PORT}:25565"
+      - "${QUERY_PORT}:${QUERY_PORT}/udp"
+
+    volumes:
+      - mc-data:/data 
+
+    environment:
+      EULA: ${EULA}
+      XMX: ${XMX}
+      XMS: ${XMS}
+      ENABLE_QUERY: ${ENABLE_QUERY}
+      QUERY_PORT: ${QUERY_PORT}
+
+    stdin_open: true
+    tty: true
+
+    restart: unless-stopped
+
+volumes:
+  mc-data:
